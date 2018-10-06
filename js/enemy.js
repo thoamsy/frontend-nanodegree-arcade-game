@@ -4,14 +4,19 @@ import Resources from './resources';
 // Enemies our player must avoid
 export default class Enemy {
   constructor(ctx, columns) {
-    const height = 101;
+    const height = 70;
+    this.setCoordinate(height);
+    this.maxX = height * columns;
+    this.ctx = ctx;
+    this.sprite = bug;
+    this.height = height;
+  }
+
+  setCoordinate(height) {
     const x = -100;
     const y = [height * 1, height * 2, height * 3][~~(Math.random() * 10) % 3];
     this.x = x;
     this.y = y;
-    this.maxX = height * columns;
-    this.ctx = ctx;
-    this.sprite = bug;
   }
 
   get velocity() {
@@ -29,12 +34,12 @@ export default class Enemy {
   // Parameter: dt, a time delta between ticks
   update(dt) {
     const nextX = this.x + this.velocity * dt;
-    if (nextX <= this.maxX) {
+    if (nextX <= this.maxX + 50) {
       this.ctx.drawImage(Resources.get(this.sprite), nextX, this.y);
       this.x = nextX;
     } else {
       this.velocity = 0;
-      this.x = -100;
+      this.setCoordinate(this.height);
       this.render();
     }
     // You should multiply any movement by the dt parameter

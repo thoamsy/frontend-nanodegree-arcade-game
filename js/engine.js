@@ -100,13 +100,6 @@ export default class Engine {
          */
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < columns; col++) {
-        /* The drawImage function of the canvas' context element
-                 * requires 3 parameters: the image to draw, the x coordinate
-                 * to start drawing and the y coordinate to start drawing.
-                 * We're using our Resources helpers to refer to our images
-                 * so that we get the benefits of caching these images, since
-                 * we're using them over and over.
-                 */
         this.ctx.drawImage(
           Resources.get(rowImages[row]),
           col * squareWidth,
