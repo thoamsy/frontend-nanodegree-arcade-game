@@ -88,6 +88,8 @@ export default class Engine {
   }
 
   checkCollisions() {
+    // 如果玩家还在草地上，不需要碰撞检测。
+    if (this.player.y >= rectHeight * 3) return;
     // 不使用 forEach，因为无法提前退出循环
     for (const enemy of this.allEnemies ?? []) {
       if (
