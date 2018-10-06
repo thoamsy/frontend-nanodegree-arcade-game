@@ -25,6 +25,15 @@ export default class Engine {
     this.ctx = ctx;
     this.countOfEnemies = countOfEnemies;
 
+    const worker = new Worker('./collision-worker.js');
+    this.worker = worker;
+    this.enemiesPosition = new Int16Array(countOfEnemies * 2);
+    this.worker.onmessage = ({ data }) => {
+      if (data === 'lose') {
+        this.player.resetCoordinate();
+      }
+    };
+
     this.initRole();
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
@@ -90,16 +99,17 @@ export default class Engine {
   checkCollisions() {
     // 如果玩家还在草地上，不需要碰撞检测。
     if (this.player.y >= rectHeight * 3) return;
+    const positions = (this.allEnemies ?? []).reduce(
+      (position, { x, y }) => position.concat([~~x, ~~y]), // 防止出现浮点数的情况
+      []
+    );
+    this.enemiesPosition.set(positions);
+    this.worker.postMessage({
+      enemiesPosition: this.enemiesPosition,
+      player: [this.player.x, this.player.y],
+    });
+    return;
     // 不使用 forEach，因为无法提前退出循环
-    for (const enemy of this.allEnemies ?? []) {
-      if (
-        Math.abs(enemy.x - this.player.x) <= 30 &&
-        Math.abs(enemy.y - this.player.y) <= 30
-      ) {
-        this.player.resetCoordinate();
-        return;
-      }
-    }
   }
 
   updateEntities(dt) {
