@@ -2,12 +2,20 @@ import boy from '../images/char-boy.png';
 import Resources from './resources';
 import { rectWidth, rectHeight } from './constants';
 
+function inRange(x, [lower, upper]) {
+  return x >= lower && x <= upper;
+}
+
 // Enemies our player must avoid
 export default class Player {
-  constructor(ctx, columns) {
+  constructor(ctx, columns, rows) {
+    Object.assign(this, {
+      ctx,
+      columns,
+      rows,
+      sprite: boy,
+    });
     this.setCoordinate();
-    this.ctx = ctx;
-    this.sprite = boy;
   }
 
   setCoordinate() {
@@ -15,6 +23,8 @@ export default class Player {
     const y = rectHeight * 4.5;
     this.x = x;
     this.y = y;
+    this.rangeOfY = [y - (this.rows - 1) * rectHeight, y];
+    this.rangeOfX = [0, (this.columns - 1) * rectWidth];
   }
 
   get velocity() {
@@ -34,9 +44,8 @@ export default class Player {
 
   // Draw the enemy on the screen, required method for game
   render(x = this.x, y = this.y) {
-    // Now write your own player class
-    // This class requires an update(), render() and
-    // a handleInput() method.
+    if (!inRange(x, this.rangeOfX)) return;
+    if (!inRange(y, this.rangeOfY)) return;
     this.ctx.drawImage(Resources.get(this.sprite), x, y);
     this.x = x;
     this.y = y;
@@ -60,9 +69,5 @@ export default class Player {
     default:
       break;
     }
-  }
-
-  movePlayer(x, y) {
-    this.render(x, y);
   }
 }

@@ -27,7 +27,7 @@ export default class Engine {
     this.allEnemies = [...Array(countOfEnemies).keys()].map(() => {
       return new Enemy(ctx, columns);
     });
-    this.player = new Player(ctx, columns);
+    this.player = new Player(ctx, columns, rows);
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
