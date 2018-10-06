@@ -11,7 +11,7 @@ import Resources from './resources';
 import { columns, rows, rectWidth, rectHeight } from './constants';
 
 export default class Engine {
-  constructor(countOfEnemies = 5) {
+  constructor(countOfEnemies = 8) {
     const { document: doc } = window;
     const canvas = doc.createElement('canvas');
     const ctx = canvas.getContext('2d');

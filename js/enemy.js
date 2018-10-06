@@ -14,14 +14,17 @@ export default class Enemy {
 
   setCoordinate(height) {
     const x = -100;
-    const y = [height * 1, height * 2, height * 3][~~(Math.random() * 10) % 3];
+    const range = 3;
+    const y = [...Array(range).keys()].map(i => (i + 1) * height)[
+      ~~(Math.random() * 1000) % range
+    ];
     this.x = x;
     this.y = y;
   }
 
   get velocity() {
     if (!this._velocity) {
-      this._velocity = ~~(Math.random() * 200) + 100;
+      this._velocity = ~~(Math.random() * 300) + 100;
     }
     return this._velocity;
   }
