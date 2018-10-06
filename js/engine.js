@@ -23,11 +23,9 @@ export default class Engine {
     this.lastTime = 0;
     this.canvas = canvas;
     this.ctx = ctx;
+    this.countOfEnemies = countOfEnemies;
 
-    this.allEnemies = [...Array(countOfEnemies).keys()].map(() => {
-      return new Enemy(ctx, columns);
-    });
-    this.player = new Player(ctx, columns, rows);
+    this.initRole();
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
@@ -36,6 +34,12 @@ export default class Engine {
     Resources.onReady(this.init);
   }
 
+  initRole() {
+    this.allEnemies = [...Array(this.countOfEnemies).keys()].map(() => {
+      return new Enemy(this.ctx, columns);
+    });
+    this.player = new Player(this.ctx, columns, rows);
+  }
   /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
@@ -43,6 +47,7 @@ export default class Engine {
   init = () => {
     this.reset();
     this.addKeyControl();
+    this.addWinnerHandler();
     this.lastTime = performance.now();
     this.main();
   };
@@ -63,14 +68,22 @@ export default class Engine {
   };
 
   addKeyControl = () => {
-    document.addEventListener('keyup', e => {
+    document.body.addEventListener('keyup', e => {
       e.preventDefault();
       this.player.handleInput(e.key);
     });
   };
+
+  addWinnerHandler = () => {
+    document.body.addEventListener('winner', () => {
+      this.reset();
+      this.main();
+    });
+  };
+
   update(dt) {
     this.updateEntities(dt);
-    // checkCollisions();
+    // this.checkCollisions();
   }
 
   /* This is called by the update function and loops through all of the
@@ -84,7 +97,6 @@ export default class Engine {
     this.allEnemies.forEach(function(enemy) {
       enemy.update(dt);
     });
-    // player.update();
   }
 
   /* This function initially draws the "game level", it will then call
@@ -137,6 +149,8 @@ export default class Engine {
      * those sorts of things. It's only called once by the init() method.
      */
   reset() {
-    // noop
+    this.allEnemies = null;
+    this.player = null;
+    this.initRole();
   }
 }

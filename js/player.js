@@ -38,10 +38,6 @@ export default class Player {
     this._velocity = 0;
   }
 
-  // Update the enemy's position, required method for game
-  // Parameter: dt, a time delta between ticks
-  update(dt) {}
-
   // Draw the enemy on the screen, required method for game
   render(x = this.x, y = this.y) {
     if (!inRange(x, this.rangeOfX)) return;
@@ -56,6 +52,15 @@ export default class Player {
     switch (direction) {
     case 'up':
       this.render(this.x, this.y - rectHeight);
+      // 抵达水域
+      if (this.y < 0.5 * rectHeight) {
+        // 使用自定义事件来通知玩家胜出
+        const winnerEvent = new CustomEvent('winner', { bubbles: true });
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        div.dispatchEvent(winnerEvent);
+        document.body.removeChild(div);
+      }
       break;
     case 'down':
       this.render(this.x, this.y + rectHeight);
