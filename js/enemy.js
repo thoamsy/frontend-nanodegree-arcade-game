@@ -21,7 +21,7 @@ export default class Enemy {
 
   get velocity() {
     if (!this._velocity) {
-      this._velocity = 100 * [~~(Math.random() * 10) % 5];
+      this._velocity = ~~(Math.random() * 200) + 100;
     }
     return this._velocity;
   }
@@ -40,7 +40,7 @@ export default class Enemy {
     } else {
       this.velocity = 0;
       this.setCoordinate(this.height);
-      this.render();
+      setTimeout(() => this.render(), 2000);
     }
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
