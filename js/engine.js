@@ -106,7 +106,7 @@ export default class Engine {
     this.enemiesPosition.set(positions);
     this.worker.postMessage({
       enemiesPosition: this.enemiesPosition,
-      player: [this.player.x, this.player.y],
+      player: { x: this.player.x, y: this.player.y },
     });
     return;
     // 不使用 forEach，因为无法提前退出循环
