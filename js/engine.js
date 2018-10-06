@@ -96,7 +96,18 @@ export default class Engine {
     this.checkCollisions();
   }
 
-  checkCollisions() {}
+  checkCollisions() {
+    // 不使用 forEach，因为无法提前退出循环
+    for (const enemy of this.allEnemies ?? []) {
+      if (
+        Math.abs(enemy.x - this.player.x) <= 30 &&
+        Math.abs(enemy.y - this.player.y) <= 30
+      ) {
+        this.player.resetCoordinate();
+        return;
+      }
+    }
+  }
 
   updateEntities(dt) {
     this.allEnemies.forEach(function(enemy) {

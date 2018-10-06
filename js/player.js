@@ -15,19 +15,20 @@ export default class Player {
       rows,
       sprite: boy,
     });
-    this.setCoordinate();
+    this.resetCoordinate();
+    this.rangeOfY = [this.y - (this.rows - 1) * rectHeight, this.y];
+    this.rangeOfX = [0, (this.columns - 1) * rectWidth];
+
     const div = document.createElement('div');
     document.body.appendChild(div);
     this.div = div;
   }
 
-  setCoordinate() {
+  resetCoordinate() {
     const x = rectWidth * 2;
     const y = rectHeight * 4.5;
     this.x = x;
     this.y = y;
-    this.rangeOfY = [y - (this.rows - 1) * rectHeight, y];
-    this.rangeOfX = [0, (this.columns - 1) * rectWidth];
   }
 
   get velocity() {
