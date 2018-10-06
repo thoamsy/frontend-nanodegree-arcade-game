@@ -33,14 +33,36 @@ export default class Player {
   update(dt) {}
 
   // Draw the enemy on the screen, required method for game
-  render() {
+  render(x = this.x, y = this.y) {
     // Now write your own player class
     // This class requires an update(), render() and
     // a handleInput() method.
-    this.ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    this.ctx.drawImage(Resources.get(this.sprite), x, y);
+    this.x = x;
+    this.y = y;
   }
 
-  // Now instantiate your objects.
-  // Place all enemy objects in an array called allEnemies
-  // Place the player object in a variable called player
+  handleInput(key) {
+    const direction = key.slice(5).toLowerCase();
+    switch (direction) {
+    case 'up':
+      this.render(this.x, this.y - rectHeight);
+      break;
+    case 'down':
+      this.render(this.x, this.y + rectHeight);
+      break;
+    case 'left':
+      this.render(this.x - rectWidth, this.y);
+      break;
+    case 'right':
+      this.render(this.x + rectWidth, this.y);
+      break;
+    default:
+      break;
+    }
+  }
+
+  movePlayer(x, y) {
+    this.render(x, y);
+  }
 }

@@ -42,6 +42,7 @@ export default class Engine {
      */
   init = () => {
     this.reset();
+    this.addKeyControl();
     this.lastTime = performance.now();
     this.main();
   };
@@ -61,6 +62,12 @@ export default class Engine {
     requestAnimationFrame(this.main);
   };
 
+  addKeyControl = () => {
+    document.addEventListener('keyup', e => {
+      e.preventDefault();
+      this.player.handleInput(e.key);
+    });
+  };
   update(dt) {
     this.updateEntities(dt);
     // checkCollisions();
