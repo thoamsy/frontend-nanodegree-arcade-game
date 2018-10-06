@@ -5,11 +5,10 @@ import bug from '../images/enemy-bug.png';
 import charboy from '../images/char-boy.png';
 
 import Enemy from './enemy';
+import Player from './player';
 import Resources from './resources';
 
-const squareWidth = 101;
-const columns = 5;
-const rows = 6;
+import { columns, rows, rectWidth, rectHeight } from './constants';
 
 export default class Engine {
   constructor(countOfEnemies = 5) {
@@ -17,8 +16,8 @@ export default class Engine {
     const canvas = doc.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
-    canvas.width = squareWidth * columns;
-    canvas.height = squareWidth * rows;
+    canvas.width = rectWidth * columns;
+    canvas.height = rectWidth * rows;
     doc.body.appendChild(canvas);
 
     this.lastTime = 0;
@@ -28,6 +27,7 @@ export default class Engine {
     this.allEnemies = [...Array(countOfEnemies).keys()].map(() => {
       return new Enemy(ctx, columns);
     });
+    this.player = new Player(ctx, columns);
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
@@ -102,8 +102,8 @@ export default class Engine {
       for (let col = 0; col < columns; col++) {
         this.ctx.drawImage(
           Resources.get(rowImages[row]),
-          col * squareWidth,
-          row * 83
+          col * rectWidth,
+          row * rectHeight
         );
       }
     }
@@ -122,7 +122,7 @@ export default class Engine {
     this.allEnemies.forEach(enemy => {
       enemy.render();
     });
-    // player.render();
+    this.player.render();
   }
 
   /* This function does nothing but it could have been a good place to
