@@ -6,7 +6,11 @@ const readyCallbacks = [];
      * image. It will then call our private image loading function accordingly.
      */
 function load(urlOrArr) {
-  urlOrArr.forEach?.(_load) ?? _load(urlOrArr);
+  if (Array.isArray(urlOrArr)) {
+    urlOrArr.forEach(_load);
+  } else {
+    _load(urlOrArr);
+  }
 }
 
 /* This is our private image loader function, it is

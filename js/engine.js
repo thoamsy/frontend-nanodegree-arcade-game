@@ -4,6 +4,7 @@ import grass from '../images/grass-block.png';
 import bug from '../images/enemy-bug.png';
 import charboy from '../images/char-boy.png';
 
+import Enemy from './enemy';
 import Resources from './resources';
 
 const squareWidth = 101;
@@ -11,7 +12,7 @@ const columns = 5;
 const rows = 6;
 
 export default class Engine {
-  constructor() {
+  constructor(countOfEnemies = 5) {
     const { document: doc } = window;
     const canvas = doc.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -19,34 +20,33 @@ export default class Engine {
     canvas.width = squareWidth * columns;
     canvas.height = squareWidth * rows;
     doc.body.appendChild(canvas);
+
+    this.lastTime = 0;
+    this.canvas = canvas;
+    this.ctx = ctx;
+
+    this.allEnemies = [...Array(countOfEnemies).keys()].map(() => {
+      return new Enemy(ctx, columns);
+    });
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
      */
     Resources.load([stone, water, grass, bug, charboy]);
     Resources.onReady(this.init);
-
-    this.lastTime = 0;
-    this.canvas = canvas;
-    this.ctx = ctx;
-    /* Assign the canvas' context object to the global variable (the window
-     * object when run in a browser) so that developers can use it more easily
-     * from within their app.js files.
-     */
-    window.ctx = ctx;
   }
 
   /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
-  init() {
+  init = () => {
     this.reset();
     this.lastTime = performance.now();
     this.main();
-  }
+  };
 
-  main() {
+  main = () => {
     /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
          * instructions at different speeds we need a constant value that
@@ -55,11 +55,11 @@ export default class Engine {
          */
     const now = performance.now();
     const dt = (now - this.lastTime) / 1000.0;
-    this.update(dt);
     this.render();
+    this.update(dt);
     this.lastTime = now;
     requestAnimationFrame(this.main);
-  }
+  };
 
   update(dt) {
     this.updateEntities(dt);
@@ -74,9 +74,9 @@ export default class Engine {
      * render methods.
      */
   updateEntities(dt) {
-    // allEnemies.forEach(function(enemy) {
-    //   enemy.update(dt);
-    // });
+    this.allEnemies.forEach(function(enemy) {
+      enemy.update(dt);
+    });
     // player.update();
   }
 
@@ -126,9 +126,9 @@ export default class Engine {
     /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-    // allEnemies.forEach(function(enemy) {
-    //   enemy.render();
-    // });
+    this.allEnemies.forEach(enemy => {
+      enemy.render();
+    });
     // player.render();
   }
 
