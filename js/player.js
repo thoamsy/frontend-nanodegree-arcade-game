@@ -16,6 +16,9 @@ export default class Player {
       sprite: boy,
     });
     this.setCoordinate();
+    const div = document.createElement('div');
+    document.body.appendChild(div);
+    this.div = div;
   }
 
   setCoordinate() {
@@ -47,6 +50,14 @@ export default class Player {
     this.y = y;
   }
 
+  sendPlayerPosition(x, y) {
+    const moveEvent = new CustomEvent('move', {
+      bubbles: true,
+      detail: { x, y },
+    });
+    this.div.dispatchEvent(moveEvent);
+  }
+
   handleInput(key) {
     const direction = key.slice(5).toLowerCase();
     switch (direction) {
@@ -56,10 +67,7 @@ export default class Player {
       if (this.y < 0.5 * rectHeight) {
         // 使用自定义事件来通知玩家胜出
         const winnerEvent = new CustomEvent('winner', { bubbles: true });
-        const div = document.createElement('div');
-        document.body.appendChild(div);
-        div.dispatchEvent(winnerEvent);
-        document.body.removeChild(div);
+        this.div.dispatchEvent(winnerEvent);
       }
       break;
     case 'down':
@@ -72,7 +80,8 @@ export default class Player {
       this.render(this.x + rectWidth, this.y);
       break;
     default:
-      break;
+      return;
     }
+    this.sendPlayerPosition(this.x, this.y);
   }
 }
