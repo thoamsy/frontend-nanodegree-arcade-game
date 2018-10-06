@@ -48,7 +48,6 @@ export default class Engine {
     this.reset();
     this.addKeyControl();
     this.addWinnerHandler();
-    this.addPlayerPosition();
     this.lastTime = performance.now();
     this.main();
   };
@@ -80,14 +79,6 @@ export default class Engine {
     document.body.addEventListener('winner', () => {
       this.reset();
       this.main();
-    });
-  };
-
-  addPlayerPosition = () => {
-    document.body.addEventListener('move', ({ detail }) => {
-      console.log(detail);
-      this.playerX = detail.x;
-      this.playerY = detail.y;
     });
   };
 

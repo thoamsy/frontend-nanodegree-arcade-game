@@ -51,14 +51,6 @@ export default class Player {
     this.y = y;
   }
 
-  sendPlayerPosition(x, y) {
-    const moveEvent = new CustomEvent('move', {
-      bubbles: true,
-      detail: { x, y },
-    });
-    this.div.dispatchEvent(moveEvent);
-  }
-
   handleInput(key) {
     const direction = key.slice(5).toLowerCase();
     switch (direction) {
@@ -83,6 +75,5 @@ export default class Player {
     default:
       return;
     }
-    this.sendPlayerPosition(this.x, this.y);
   }
 }
